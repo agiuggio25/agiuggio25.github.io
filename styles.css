@@ -1,0 +1,137 @@
+/* ===== Design tokens: change a color here and it changes everywhere ===== */
+:root {
+  --maroon: #881C1C;       /* UMass maroon: accents, links, menu */
+  --maroon-dark: #5E1313;  /* hover state */
+  --ground: #FFFFFF;       /* page background */
+  --ink: #1B1A19;          /* main text */
+  --muted: #5F5955;        /* secondary text */
+  --grout: #E7E2DD;        /* the "grout" lines between tiles */
+
+  --font-display: "Bricolage Grotesque", Georgia, serif;
+  --font-body: "Public Sans", Arial, sans-serif;
+
+  /* Five type sizes, far apart, so headings clearly outrank body text */
+  --size-1: 0.875rem;
+  --size-2: 1.0625rem;
+  --size-3: 1.375rem;
+  --size-4: 2rem;
+  --size-5: clamp(2.6rem, 8vw, 4.75rem);
+
+  --gutter: 16px;
+  --max: 1100px;
+}
+
+/* ===== Base ===== */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--size-2);
+  line-height: 1.6;
+}
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.1; margin: 0 0 0.5em; }
+p { margin: 0 0 0.75em; }
+a { color: var(--maroon); text-underline-offset: 3px; }
+a:hover { color: var(--maroon-dark); }
+::selection { background: var(--maroon); color: #fff; }
+/* Keyboard users need to see where they are */
+:focus-visible { outline: 3px solid var(--maroon); outline-offset: 3px; }
+
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: var(--gutter); top: 8px; background: #fff; padding: 8px; z-index: 10; }
+
+/* ===== Header and menu ===== */
+.site-header {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 4px 16px;
+  padding: 10px var(--gutter);
+  background: var(--maroon);
+}
+.site-header a { color: #fff; text-decoration: none; }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: var(--size-3); }
+/* Menu links wrap on phones instead of hiding behind a hamburger, so no JavaScript is needed */
+.site-header nav { display: flex; flex-wrap: wrap; gap: 0 18px; }
+.site-header nav a { padding: 10px 0; min-height: 44px; display: inline-flex; align-items: center; }
+.site-header nav a:hover { text-decoration: underline; color: #fff; }
+
+/* ===== Home ===== */
+.hero {
+  max-width: var(--max); margin: 0 auto;
+  padding: 48px var(--gutter);
+  display: grid; gap: 32px; align-items: center;
+}
+.photo-frame {
+  width: 160px; height: 160px; border-radius: 50%; overflow: hidden;
+  border: 4px solid var(--maroon);
+  margin-bottom: 20px;
+}
+/* The photo has black corners; scaling it up slightly inside a circle hides them */
+.photo-frame img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.04); display: block; }
+.hero h1 { font-size: var(--size-5); font-weight: 800; }
+.pitch { font-size: var(--size-3); color: var(--muted); max-width: 34ch; }
+
+/* Tile wall: 4x3 grid; the gap shows the grout color behind the tiles */
+.tile-wall {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 6px; background: var(--grout); padding: 6px;
+  aspect-ratio: 3 / 4; max-width: 360px; width: 100%;
+}
+.tile-wall span { background: #F7F4F1; }
+.tile-wall span.m { background: var(--maroon); }
+
+/* The one live moment: tiles "set" row by row when the page loads */
+.tile-wall span { animation: set 0.45s ease-out both; }
+.tile-wall span:nth-child(n+4)  { animation-delay: 0.12s; }
+.tile-wall span:nth-child(n+7)  { animation-delay: 0.24s; }
+.tile-wall span:nth-child(n+10) { animation-delay: 0.36s; }
+@keyframes set {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+/* People who turn off motion in their settings get the finished wall, no animation */
+@media (prefers-reduced-motion: reduce) {
+  .tile-wall span { animation: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* ===== Sections ===== */
+.band {
+  max-width: var(--max); margin: 0 auto;
+  padding: 40px var(--gutter);
+  border-top: 6px solid var(--grout);
+  scroll-margin-top: 110px; /* so the sticky menu doesn't cover section titles */
+}
+.band h2 { font-size: var(--size-4); color: var(--maroon); }
+
+/* Tiles: square corners on purpose, like real tile */
+.tile { background: #fff; padding: 22px; }
+.tile h3 { font-size: var(--size-3); }
+
+/* Grids use a grout-colored background + gap, so the lines between tiles look like grout */
+.about-grid, .project-grid {
+  display: grid; gap: 6px; background: var(--grout); padding: 6px;
+}
+.tag { font-size: var(--size-1); color: var(--maroon); font-weight: 600; }
+.ph { color: var(--muted); font-style: italic; }
+.links { list-style: none; padding: 0; margin: 0; }
+.links li { padding: 4px 0; }
+#resume .tile, #contact .tile { border: 6px solid var(--grout); }
+.email { font-size: var(--size-3); font-weight: 600; word-break: break-all; }
+
+.site-footer {
+  background: var(--ink); color: #D9D4CF;
+  padding: 20px var(--gutter); font-size: var(--size-1); text-align: center;
+}
+.site-footer p { margin: 0; }
+
+/* ===== Wider screens ===== */
+@media (min-width: 768px) {
+  .hero { grid-template-columns: 1.4fr 1fr; padding-top: 72px; padding-bottom: 72px; }
+  .tile-wall { justify-self: end; }
+  .about-grid { grid-template-columns: repeat(3, 1fr); }
+  .project-grid { grid-template-columns: 1.3fr 1fr; }
+}
